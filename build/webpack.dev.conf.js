@@ -11,8 +11,18 @@ const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
 
 const HOST = process.env.HOST
-const PORT = process.env.PORT && Number(process.env.PORT)
+const PORT = process.env.PORT && Number(process.env.PORT);
 
+//首先
+// nodejs开发框架express，用来简化操作
+const express = require('express')
+// 创建node.js的express开发框架的实例
+const app = express()
+var apiRoutes = express.Router()
+app.use(apiRoutes);
+
+var appData = require('../modeldata/goods.json');
+// 引用的json地址
 const devWebpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
@@ -42,8 +52,15 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     quiet: true, // necessary for FriendlyErrorsPlugin
     watchOptions: {
       poll: config.dev.poll,
-    }
-  },
+    },
+
+// 在devServer选项中添加以下内容
+  before(app) {
+    app.get('/goods', (req, res) => {
+      res.json(appData)
+    })
+  }
+},
   plugins: [
     new webpack.DefinePlugin({
       'process.env': require('../config/dev.env')

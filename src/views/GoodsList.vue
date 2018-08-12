@@ -8,16 +8,16 @@
           <span class="sortby">排序:</span>
           <a href="javascript:void(0)" class="default cur">默认</a>
           <a href="javascript:void(0)" class="price">价格 <svg class="icon icon-arrow-short"><use xlink:href="#icon-arrow-short"></use></svg></a>
-          <a href="javascript:void(0)" class="filterby">筛选</a>
+          <a href="javascript:void(0)" class="filterby" @click.stop="showFilterPop">筛选</a>
         </div>
         <div class="accessory-result">
           <!-- filter -->
-          <div class="filter" id="filter">
+          <div class="filter" id="filter" v-bind:class="{'filterBy-show':filterBy==true}">
             <dl class="filter-price">
               <dt>价格区间:</dt>
-              <dd><a href="javascript:void(0)">选择价格</a></dd>
-              <dd>
-                <a href="javascript:void(0)">￥ 0 - 100 元</a>
+              <dd><a href="javascript:void(0)" @click="setPriceFilter('all')" v-bind:class="{'cur':priceCheck=='all'}">选择价格</a></dd>
+              <dd v-for="(item,index) in priceFilter">
+                <a href="javascript:void(0)" @click="setPriceFilter(index)" v-bind:class="{'cur':priceCheck==index}">￥ {{item.startPrice}} - {{item.endPrice}}元</a>
               </dd>
             </dl>
           </div>
@@ -58,22 +58,65 @@
   import NavHeader from './../components/NavHeader'
   import NavFooter from './../components/NavFooter'
   import NavBread from './../components/NavBread'
+  import axios from 'axios'
+  /*var express = require('express')
+  var app = express();
+  const router = express.Router();*/
   export default {
    // name: 'HelloWorld',
     data () {
       return {
-        goodsList: [{
-          "productId":"10001",
-          "productName":"小米空气净化器 2",
-          "salePrice":"699",
-          "productImage":"小米空气净化器 2.jpg"
-        }]
+        goodsList: [],
+        priceFilter:[
+          {
+            startPrice:'0.00',
+            endPrice:'100.00'
+          },
+          {
+            startPrice:'100.00',
+            endPrice:'500.00'
+          },
+          {
+            startPrice:'500.00',
+            endPrice:'1000.00'
+          },
+          {
+            startPrice:'1000.00',
+            endPrice:'2000.00'
+          },
+          {
+            startPrice:'2000.00',
+            endPrice:'3000.00'
+          },
+          {
+            startPrice:'3000.00',
+            endPrice:'6000.00'
+          }
+        ],
+        priceCheck:'all',
+        filterBy:true
       }
     },
-    components:{
+     components:{
       NavHeader,
       NavFooter,
       NavBread
+    },
+    mounted(){
+      this.getGoodsList();
+    },
+    methods:{
+      getGoodsList(){
+        axios.get('/goods').then((result)=>{
+          this.goodsList=result.data;
+        })
+      },
+      setPriceFilter(index){
+        this.priceCheck=index;
+      },
+      showFilterPop(){
+        this.filterBy=true;
+      }
     }
   }
 </script>
