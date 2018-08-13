@@ -13,7 +13,7 @@ const portfinder = require('portfinder')
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT);
 
-//首先
+/*//首先
 // nodejs开发框架express，用来简化操作
 const express = require('express')
 // 创建node.js的express开发框架的实例
@@ -21,7 +21,7 @@ const app = express()
 var apiRoutes = express.Router()
 app.use(apiRoutes);
 
-var appData = require('../modeldata/goods.json');
+var appData = require('../modeldata/goods.json');*/
 // 引用的json地址
 const devWebpackConfig = merge(baseWebpackConfig, {
   module: {
@@ -54,12 +54,12 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       poll: config.dev.poll,
     },
 
-// 在devServer选项中添加以下内容
+/*// 在devServer选项中添加以下内容 读取本地json文件data
   before(app) {
     app.get('/goods', (req, res) => {
       res.json(appData)
     })
-  }
+  }*/
 },
   plugins: [
     new webpack.DefinePlugin({
