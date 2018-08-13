@@ -40,6 +40,12 @@
                 </li>
               </ul>
             </div>
+            <div class="view-more-normal"
+                 v-infinite-scroll="loadMore"
+                 infinite-scroll-disabled="busy"
+                 infinite-scroll-distance="20">
+              <img src="/static/loading-svg/loading-spinning-bubbles.svg" v-show="loading">
+            </div>
           </div>
         </div>
       </div>
@@ -69,8 +75,10 @@
       return {
         goodsList: [],
         page:1,
-        pageSize:10,
+        pageSize:5,
         sortFlag:true,
+        busy:false,
+        loading:false,
         priceFilter:[
           {
             startPrice:'0.00',
@@ -111,7 +119,7 @@
       this.getGoodsList();
     },
     methods:{
-      getGoodsList(){
+      getGoodsList(flag){
         var param = {
           page:this.page,
           pageSize:this.pageSize,
@@ -120,8 +128,24 @@
         axios.get('http://localhost:3000/goods',{
           params:param
         }).then((result)=>{
+          this.loading = false;
+           var data=result.data.result;
           console.log(result);
-          this.goodsList=result.data.result.list;
+        if(result.data.status == "1"){
+           if(flag){
+               this.goodsList = this.goodsList.concat(data.list);
+                if(data.count == 0){//没有数据
+                    this.busy = true;
+                }else{
+                  this.busy = false;
+                }
+             }else{
+               this.goodsList=data.list;
+             }
+          }else{
+            this.goodsList= [];
+          }
+
         })
       },
       setPriceFilter(index){
@@ -144,7 +168,15 @@
         this.sortFlag = true;
         this.page = 1;
         this.getGoodsList();
-      }
+      },
+     // 滚动加载函数
+        loadMore(){
+          this.busy = true;
+          setTimeout(() => {
+            this.page++;
+            this.getGoodsList(true);
+          }, 500)
+        },
     }
   }
 </script>
