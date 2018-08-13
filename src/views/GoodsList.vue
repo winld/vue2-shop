@@ -12,7 +12,7 @@
         </div>
         <div class="accessory-result">
           <!-- filter -->
-          <div class="filter" id="filter" v-bind:class="{'filterBy-show':filterBy==true}">
+          <div class="filter" id="filter" v-bind:class="{'filterby-show':filterBy==true}">
             <dl class="filter-price">
               <dt>价格区间:</dt>
               <dd><a href="javascript:void(0)" @click="setPriceFilter('all')" v-bind:class="{'cur':priceCheck=='all'}">选择价格</a></dd>
@@ -94,7 +94,7 @@
           }
         ],
         priceCheck:'all',
-        filterBy:true
+        filterBy:false
       }
     },
      components:{
