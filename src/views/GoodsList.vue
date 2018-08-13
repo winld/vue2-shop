@@ -6,8 +6,8 @@
       <div class="container">
         <div class="filter-nav">
           <span class="sortby">排序:</span>
-          <a href="javascript:void(0)" class="default cur">默认</a>
-          <a href="javascript:void(0)" class="price">价格 <svg class="icon icon-arrow-short"><use xlink:href="#icon-arrow-short"></use></svg></a>
+          <a href="javascript:void(0)" class="default cur" @click="defaultsortGoods">默认</a>
+          <a href="javascript:void(0)" class="price" @click="sortGoods" v-bind:class="{'sort-up':sortFlag}">价格 <svg class="icon icon-arrow-short"><use xlink:href="#icon-arrow-short"></use></svg></a>
           <a href="javascript:void(0)" class="filterby" @click.stop="showFilterPop">筛选</a>
         </div>
         <div class="accessory-result">
@@ -70,7 +70,7 @@
         goodsList: [],
         page:1,
         pageSize:10,
-        sortFlag:1,
+        sortFlag:true,
         priceFilter:[
           {
             startPrice:'0.00',
@@ -115,7 +115,7 @@
         var param = {
           page:this.page,
           pageSize:this.pageSize,
-          sort:this.sortFlag
+          sort:this.sortFlag?1:-1
         }
         axios.get('http://localhost:3000/goods',{
           params:param
@@ -134,6 +134,16 @@
       closePop(){
         this.filterBy=false;
         this.overLayFlag=false;
+      },
+      sortGoods(){
+        this.sortFlag = !this.sortFlag;
+        this.page = 1;
+        this.getGoodsList();
+      },
+      defaultsortGoods(){
+        this.sortFlag = true;
+        this.page = 1;
+        this.getGoodsList();
       }
     }
   }
